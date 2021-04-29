@@ -121,11 +121,14 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
+		// 获取Configuration注释属性
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
+			// 简单理类有@configuration注解是full
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
 		else if (config != null || isConfigurationCandidate(metadata)) {
+			//　类有@Component,@ComponentScan,@Import,@ImportResource或者类中有@Bean方法，此类是lite
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
 		else {
@@ -135,6 +138,7 @@ abstract class ConfigurationClassUtils {
 		// It's a full or lite configuration candidate... Let's determine the order value, if any.
 		Integer order = getOrder(metadata);
 		if (order != null) {
+			// 设置order属性
 			beanDef.setAttribute(ORDER_ATTRIBUTE, order);
 		}
 
@@ -154,7 +158,7 @@ abstract class ConfigurationClassUtils {
 			return false;
 		}
 
-		// Any of the typical annotations found?
+		// Any of the typical annotations found? Component,ComponentScan,Import,ImportResource
 		for (String indicator : candidateIndicators) {
 			if (metadata.isAnnotated(indicator)) {
 				return true;

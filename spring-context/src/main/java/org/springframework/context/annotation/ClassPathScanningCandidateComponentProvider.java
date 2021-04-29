@@ -412,6 +412,11 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		return candidates;
 	}
 
+	/**
+	 * 获取包目录下所有source
+	 * @param basePackage
+	 * @return 返回 封装source的ScannedGenericBeanDefinition集合
+	 */
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
@@ -434,6 +439,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 								if (debugEnabled) {
 									logger.debug("Identified candidate component class: " + resource);
 								}
+								// 添加ScannedGenericBeanDefinition
 								candidates.add(sbd);
 							}
 							else {

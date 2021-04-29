@@ -97,6 +97,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 
 	private final Class<?>[] parameterTypes;
 
+	// advice方法对象
 	protected transient Method aspectJAdviceMethod;
 
 	private final AspectJExpressionPointcut pointcut;
@@ -118,6 +119,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	/**
 	 * This will be non-null if the creator of this advice object knows the argument names
 	 * and sets them explicitly.
+	 * 方法参数名数组
 	 */
 	@Nullable
 	private String[] argumentNames;
@@ -469,8 +471,14 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 		return discoverer;
 	}
 
+	/**
+	 * 查看calculateArgumentBindings方法注释，
+	 * 匹配除pointcut,proceedingPointCut或者JoinPoint.StaticPart参数外其它参数。
+	 * @param numArgumentsLeftToBind 剩余绑定参数个数
+	 */
 	private void bindExplicitArguments(int numArgumentsLeftToBind) {
 		Assert.state(this.argumentNames != null, "No argument names available");
+		// 存放剩余参数名与参数下标
 		this.argumentBindings = new HashMap<>();
 
 		int numExpectedArgumentNames = this.aspectJAdviceMethod.getParameterCount();

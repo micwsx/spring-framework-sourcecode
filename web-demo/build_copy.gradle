@@ -14,7 +14,7 @@ dependencies {
 //    compile(project(":spring-core"))
     compile(project(":spring-context"))
     compile(project(":spring-aop"))
-    optional("org.aspectj:aspectjweaver")
+//    compile("org.aspectj:aspectjweaver")
 
     compile(project(":spring-webmvc"))
 //    compile(project(":spring-web"))

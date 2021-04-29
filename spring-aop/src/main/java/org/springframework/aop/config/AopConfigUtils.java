@@ -40,8 +40,8 @@ import org.springframework.util.Assert;
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Mark Fisher
- * @since 2.5
  * @see AopNamespaceUtils
+ * @since 2.5
  */
 public abstract class AopConfigUtils {
 
@@ -120,18 +120,24 @@ public abstract class AopConfigUtils {
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 
+		// 判断是否已经有注册过org.springframework.aop.config.internalAutoProxyCreator
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
 			BeanDefinition apcDefinition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
+			// 需要注册的类是否与已经存在的org.springframework.aop.config.internalAutoProxyCreator是否一样
 			if (!cls.getName().equals(apcDefinition.getBeanClassName())) {
+				// 不一样则获取目前已经存在Bean的优先级
 				int currentPriority = findPriorityForClass(apcDefinition.getBeanClassName());
+				// 获取需要注册Bean的优先级
 				int requiredPriority = findPriorityForClass(cls);
+				// 若已注入的Bean的优先级<即将注入的Bean，则换成即将注入的Bean
 				if (currentPriority < requiredPriority) {
+					// 修改BeanClassName
 					apcDefinition.setBeanClassName(cls.getName());
 				}
 			}
 			return null;
 		}
-
+		// 若没有注册过org.springframework.aop.config.internalAutoProxyCreator，则创建并注册BeanDefinition
 		RootBeanDefinition beanDefinition = new RootBeanDefinition(cls);
 		beanDefinition.setSource(source);
 		beanDefinition.getPropertyValues().add("order", Ordered.HIGHEST_PRECEDENCE);
